@@ -32,15 +32,36 @@ sub build {
 
     checked_run(qw(git clone), $repo, $dir);
     chdir $dir;
-
     checked_run(qw(git checkout), $branch);
+    
+    if (not -e 'pom.xml') {
+        die "pom.xml was not found for plugin $id";
+    }
+    open my $fh, '+<', 'pom.xml' or die "Cannot modify pom.xml: $!";
+    my @lines = <$fh>;
+    seek $fh, 0, 0;
+    truncate $fh, 0;
+    my $version;
+    my $found = 0;
+    for my $line (@lines) {
+        if (!$found and $line =~ />\s*([^>]+?)-SNAPSHOT\s*</) {
+            $version = "$1-TEST";
+            $line =~ s/>[^>]+</>$version</;
+            $found = 1;
+        }
+        print $fh $line;
+    }
+    close $fh;
+    if (not $version) {
+        die "Cannot find plugin SNAPSHOT version for plugin $id";
+    }
 
     checked_run(qw(mvn clean package -DskipTests));
 
     my $pattern = File::Spec->catfile($dir, 'target/*.hpi');
     my @results = glob $pattern;
     if (@results == 1) {
-        return $results[0];
+        return ($results[0], $version);
     } elsif (@results > 1) {
         die 'Multiple hpi packages were generated: ' . join(', ', @results);
     } else {
