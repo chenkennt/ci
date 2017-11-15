@@ -80,10 +80,13 @@ for my $plugin (@{$options{'build-plugin'}}) {
 }
 
 $options{'all-plugins-list'} = list2cmdline(@plugins);
-# TODO we need to resolve the plugin dependencies as in install-plugins.sh
+$options{'built-plugins'} = list2cmdline(keys %plugin_version);
 $options{'docker-copy-jpi'} = %plugin_version ? q{COPY plugins/*.jpi "$PLUGIN_DIR"} : "";
 
 process_file("$Bin/../Dockerfile.jenkins", $docker_root, \%options);
+my $resolve_dependencies = File::Spec->catfile($docker_root, 'resolve-dependencies.sh');
+copy("$Bin/../bash/resolve-dependencies.sh", $resolve_dependencies);
+chmod 0755, $resolve_dependencies;
 
 chdir $docker_root;
 
