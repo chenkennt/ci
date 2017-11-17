@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <com.microsoftopentechnologies.windowsazurestorage.AzureStorageBuilder plugin="windows-azure-storage@0.3.7">
+      <downloadType>container</downloadType>
+      <deleteFromAzureAfterDownload>true</deleteFromAzureAfterDownload>
+      <storageCredentialId>storagekey</storageCredentialId>
+      <containerName>jenkinstest</containerName>
+      <fileShare></fileShare>
+      <includeFilesPattern>artifacts/**</includeFilesPattern>
+      <excludeFilesPattern></excludeFilesPattern>
+      <downloadDirLoc></downloadDirLoc>
+      <flattenDirectories>false</flattenDirectories>
+      <includeArchiveZips>false</includeArchiveZips>
+      <projectName></projectName>
+    </com.microsoftopentechnologies.windowsazurestorage.AzureStorageBuilder>
+    <hudson.tasks.Shell>
+      <command>cat artifacts/hello.txt</command>
+      <unstableReturn>1</unstableReturn>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

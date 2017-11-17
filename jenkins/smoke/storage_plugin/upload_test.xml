@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>mkdir -p artifacts
+echo Hello, $(date) &gt; artifacts/hello.txt
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <com.microsoftopentechnologies.windowsazurestorage.WAStoragePublisher plugin="windows-azure-storage@0.3.7">
+      <storageType>blobstorage</storageType>
+      <containerName>jenkinstest</containerName>
+      <fileShareName></fileShareName>
+      <blobProperties>
+        <cacheControl></cacheControl>
+        <contentEncoding></contentEncoding>
+        <contentLanguage></contentLanguage>
+        <contentType></contentType>
+        <detectContentType>true</detectContentType>
+      </blobProperties>
+      <pubAccessible>false</pubAccessible>
+      <cleanUpContainerOrShare>false</cleanUpContainerOrShare>
+      <allowAnonymousAccess>false</allowAnonymousAccess>
+      <uploadArtifactsOnlyIfSuccessful>false</uploadArtifactsOnlyIfSuccessful>
+      <doNotFailIfArchivingReturnsNothing>false</doNotFailIfArchivingReturnsNothing>
+      <uploadZips>false</uploadZips>
+      <doNotUploadIndividualFiles>false</doNotUploadIndividualFiles>
+      <filesPath>artifacts/**</filesPath>
+      <excludeFilesPath></excludeFilesPath>
+      <virtualPath></virtualPath>
+      <doNotWaitForPreviousBuild>false</doNotWaitForPreviousBuild>
+      <storageCredentialId>storagekey</storageCredentialId>
+    </com.microsoftopentechnologies.windowsazurestorage.WAStoragePublisher>
+  </publishers>
+  <buildWrappers>
+    <hudson.plugins.ws__cleanup.PreBuildCleanup plugin="ws-cleanup@0.34">
+      <deleteDirs>false</deleteDirs>
+      <cleanupParameter></cleanupParameter>
+      <externalDelete></externalDelete>
+    </hudson.plugins.ws__cleanup.PreBuildCleanup>
+  </buildWrappers>
+</project>
